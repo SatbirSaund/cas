@@ -5,6 +5,9 @@ import org.apereo.cas.config.CasCoreUtilSerializationConfiguration;
 import org.apereo.cas.configuration.model.core.audit.AuditRestProperties;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.MockWebServer;
+import org.apereo.cas.util.junit.ConditionalIgnore;
+import org.apereo.cas.util.junit.ConditionalIgnoreRule;
+import org.apereo.cas.util.junit.RunningStandaloneCondition;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,7 @@ import static org.junit.Assert.*;
 })
 @Category(RestfulApiCategory.class)
 @Slf4j
+@ConditionalIgnore(condition = RunningStandaloneCondition.class)
 public class RestAuditTrailManagerTests {
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -47,6 +51,9 @@ public class RestAuditTrailManagerTests {
 
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
+    @Rule
+    public final ConditionalIgnoreRule conditionalIgnoreRule = new ConditionalIgnoreRule();
 
     @Test
     public void verifyAction() throws Exception {
