@@ -6,8 +6,6 @@ import org.apereo.cas.config.CasCoreUtilSerializationConfiguration;
 import org.apereo.cas.config.CasSupportRestAuditConfiguration;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.MockWebServer;
-import org.apereo.cas.util.junit.ConditionalIgnore;
-import org.apereo.cas.util.junit.RunningStandaloneCondition;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +42,6 @@ import static org.junit.Assert.*;
 })
 @Category(RestfulApiCategory.class)
 @Slf4j
-@ConditionalIgnore(condition = RunningStandaloneCondition.class)
 @TestPropertySource(properties = {
     "cas.audit.rest.url=http://localhost:9296",
     "cas.audit.rest.asynchronous=false"
