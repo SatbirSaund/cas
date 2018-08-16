@@ -6,14 +6,12 @@ import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.web.support.WebUtils;
 
 import lombok.val;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.autoconfigure.RefreshAutoConfiguration;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.test.MockRequestContext;
 
@@ -26,13 +24,10 @@ import static org.mockito.Mockito.*;
  * @author Misagh Moayyed
  * @since 5.3.0
  */
-public class DefaultAcceptableUsagePolicyRepositoryTests {
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
-
+@SpringBootTest(classes = {
+    RefreshAutoConfiguration.class
+})
+public class DefaultAcceptableUsagePolicyRepositoryTests extends BaseAcceptableUsagePolicyRepositoryTests {
     @Test
     public void verifyAction() {
         val context = new MockRequestContext();
@@ -51,5 +46,10 @@ public class DefaultAcceptableUsagePolicyRepositoryTests {
         assertFalse(repo.verify(context, c).getLeft());
         assertTrue(repo.submit(context, c));
         assertTrue(repo.verify(context, c).getLeft());
+    }
+
+    @Override
+    public boolean hasLiveUpdates() {
+        return true;
     }
 }
