@@ -7,6 +7,7 @@ import org.apereo.cas.services.AbstractRegisteredService;
 import org.apereo.cas.services.RegisteredServiceTestUtils;
 import org.apereo.cas.util.CollectionUtils;
 
+import lombok.Getter;
 import lombok.val;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -31,6 +32,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = {
     RefreshAutoConfiguration.class
 })
+@Getter
 public class BaseConsentRepositoryTests {
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -48,26 +50,32 @@ public class BaseConsentRepositoryTests {
     @Qualifier("consentRepository")
     private ConsentRepository repository;
 
+    public ConsentRepository getRepository(final String testName) {
+        return getRepository();
+    }
+
     @Test
     public void verifyConsentDecisionIsNotFound() {
+        val repo = getRepository("verifyConsentDecisionIsNotFound");
         val decision = BUILDER.build(SVC, REG_SVC, "casuser", ATTR);
         decision.setId(1);
-        repository.storeConsentDecision(decision);
+        repo.storeConsentDecision(decision);
 
-        assertNull(this.repository.findConsentDecision(SVC, REG_SVC, CoreAuthenticationTestUtils.getAuthentication()));
+        assertNull(repo.findConsentDecision(SVC, REG_SVC, CoreAuthenticationTestUtils.getAuthentication()));
     }
 
     @Test
     public void verifyConsentDecisionIsFound() {
+        val repo = getRepository("verifyConsentDecisionIsFound");
         val decision = BUILDER.build(SVC, REG_SVC, "casuser2", ATTR);
         decision.setId(100);
-        repository.storeConsentDecision(decision);
+        repo.storeConsentDecision(decision);
 
-        val d = this.repository.findConsentDecision(SVC, REG_SVC, CoreAuthenticationTestUtils.getAuthentication("casuser2"));
+        val d = repo.findConsentDecision(SVC, REG_SVC, CoreAuthenticationTestUtils.getAuthentication("casuser2"));
         assertNotNull(d);
         assertEquals("casuser2", d.getPrincipal());
 
-        assertTrue(this.repository.deleteConsentDecision(d.getId(), d.getPrincipal()));
-        assertNull(this.repository.findConsentDecision(SVC, REG_SVC, CoreAuthenticationTestUtils.getAuthentication("casuser2")));
+        assertTrue(repo.deleteConsentDecision(d.getId(), d.getPrincipal()));
+        assertNull(repo.findConsentDecision(SVC, REG_SVC, CoreAuthenticationTestUtils.getAuthentication("casuser2")));
     }
 }
